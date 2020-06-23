@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-// #define print(text) if(GEngine) GEngine->AddOnScreenDebugMessage(-01, 1.4f, FColor::Green, text);
 #include "WorldPosition.h"
+#include "GameFramework/Actor.h"
 
 // Sets default values for this component's properties
 UWorldPosition::UWorldPosition()
@@ -12,28 +12,28 @@ UWorldPosition::UWorldPosition()
 	// ...
 }
 
-
 // Called when the game starts
 void UWorldPosition::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// UE_LOG(LogTemp, Fatal, TEXT("This is a Fatal!"));
-	UE_LOG(LogTemp, Error, TEXT("This is a Error!"));
-	UE_LOG(LogTemp, Warning, TEXT("This is a Warning!"));
-	UE_LOG(LogTemp, Display, TEXT("This is a Display!"));
-	UE_LOG(LogTemp, Log, TEXT("This is a Log!"));
+	// UE_LOG(LogTemp, Warning, TEXT("%s"), *GetOwner()->GetName());
+	// UE_LOG(LogTemp, Warning, TEXT("%s"), *GetOwner()->GetActorLocation().ToString());
+	// UE_LOG(LogTemp, Warning, TEXT("%s"), *GetOwner()->GetActorLocation().ToCompactString());
 
-	// Log to Screen
-	// print("HELLO GALAXY");	
+	// FString Log = TEXT("Hello!");
+	// FString* PrtLog = &Log;
+
+	// Log.Len();
+	// (*PrtLog).
+
+	// UE_LOG(LogTemp, Warning, TEXT("%s"), *Log);
 }
 
-
 // Called every frame
-void UWorldPosition::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UWorldPosition::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
 }
-
