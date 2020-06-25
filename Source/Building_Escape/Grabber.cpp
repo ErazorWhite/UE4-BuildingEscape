@@ -37,17 +37,16 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		OUT PlayerViewPointLocation,
 		OUT PlayerViewPointRotation);
 
-	// Logging out to test
+	// // Logging out to test
 	// UE_LOG(LogTemp, Warning,
-	// 	   TEXT("PlayerViewPointLocation: %s, PlayerViewPointRotation: %s"),
+	// 	   TEXT("Location: %s, Rotation: %s, Rotation(Vector): %s"),
 	// 	   *PlayerViewPointLocation.ToString(),
-	// 	   *PlayerViewPointRotation.ToString());
+	// 	   *PlayerViewPointRotation.ToString(),
+	// 	   *PlayerViewPointRotation.Vector().ToString()
+	// 	   );
 
 	// Draw a line for showing the reach
-	
-	FVector LineTraceEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector();
-	// LineTraceEnd *= FVector(0.f, 0.f, DebugLineReach);
-	// LineTraceEnd *= DebugLineReach;
+	FVector LineTraceEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * DebugLineReach;
 
 	DrawDebugLine(
 		GetWorld(),
@@ -59,7 +58,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		0,
 		5.f);
 
-	// GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(PlayerViewPointLocation,	PlayerViewPointRotation);
 	// Ray-cast out to a certain distance (Reach)
 
 	// See what it hits
