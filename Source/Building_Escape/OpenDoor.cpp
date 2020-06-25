@@ -38,13 +38,13 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	if (PressurePlate && PressurePlate->IsOverlappingActor(ActorThatOpens))
 	{
 		OpenDoor(DeltaTime);
-		UE_LOG(LogTemp, Warning, TEXT("[Open] Seconds: %f"), GetWorld()->GetTimeSeconds());
+		// UE_LOG(LogTemp, Warning, TEXT("[Open] Seconds: %f"), GetWorld()->GetTimeSeconds());
 		DoorLastOpened = GetWorld()->GetTimeSeconds();
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[Close] Seconds: %f"), GetWorld()->GetTimeSeconds());
-		UE_LOG(LogTemp, Warning, TEXT("[DoorCloseDelay] Seconds: %f"), DoorCloseDelay);
+		// UE_LOG(LogTemp, Warning, TEXT("[Close] Seconds: %f"), GetWorld()->GetTimeSeconds());
+		// UE_LOG(LogTemp, Warning, TEXT("[DoorCloseDelay] Seconds: %f"), DoorCloseDelay);
 
 		if (GetWorld()->GetTimeSeconds() > DoorLastOpened + DoorCloseDelay)
 		{
@@ -55,7 +55,7 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 void UOpenDoor::OpenDoor(float DeltaTime)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Door rotation: %f"), GetOwner()->GetActorRotation().Yaw);
+	// UE_LOG(LogTemp, Warning, TEXT("Door rotation: %f"), GetOwner()->GetActorRotation().Yaw);
 	// CurrentYaw = FMath::Lerp(CurrentYaw, OpenAngle, DeltaTime * 1.f); // Just another way to change Yaw
 	// CurrentYaw = FMath::FInterpConstantTo(CurrentYaw, OpenAngle, DeltaTime, 45); // Hard way to change Yaw
 	CurrentYaw = FMath::FInterpTo(CurrentYaw, OpenAngle, DeltaTime, DoorOpeningSpeed); // Flexible way to change Yaw
@@ -66,7 +66,7 @@ void UOpenDoor::OpenDoor(float DeltaTime)
 
 void UOpenDoor::CloseDoor(float DeltaTime)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Door rotation: %f"), GetOwner()->GetActorRotation().Yaw);
+	// UE_LOG(LogTemp, Warning, TEXT("Door rotation: %f"), GetOwner()->GetActorRotation().Yaw);
 	// CurrentYaw = FMath::Lerp(CurrentYaw, InitialYaw, DeltaTime * 1.0f); // Just another way to change Yaw
 	// CurrentYaw = FMath::FInterpConstantTo(CurrentYaw, InitialYaw, DeltaTime, 45); // Hard way to change Yaw
 	CurrentYaw = FMath::FInterpTo(CurrentYaw, InitialYaw, DeltaTime, DoorCloseSpeed); // Flexible way to change Yaw
