@@ -7,6 +7,7 @@
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Grabber.generated.h"
 
+#define OUT
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BUILDING_ESCAPE_API UGrabber : public UActorComponent
@@ -25,7 +26,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	float Reach = 150.f;
+	float Reach = 100.f;
 
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
@@ -35,6 +36,12 @@ private:
 	void FindPhysicsHandle();
 	void SetupInputComponent();
 	
-	// Return First Actor within reach with physics body
+	// Return First Actor within reach with physics body.
 	FHitResult GetFirstPhysicsBodyInReach() const;
+
+	// Return The Line Trace End.
+	FVector GetPlayersReach() const;
+	
+	// Get Players Position In World.
+	FVector GetPlayerWorldPos() const;
 };
