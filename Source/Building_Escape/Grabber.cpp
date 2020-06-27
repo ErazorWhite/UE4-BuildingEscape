@@ -41,7 +41,7 @@ void UGrabber::SetupInputComponent()
 void UGrabber::FindPhysicsHandle()
 {
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (PhysicsHandle == nullptr)
+	if (!PhysicsHandle)
 	{
 		UE_LOG(LogTemp, Error, TEXT("No physics handle component found on %s!"), *GetOwner()->GetName());
 	}
