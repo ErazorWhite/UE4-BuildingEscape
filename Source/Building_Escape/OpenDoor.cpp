@@ -2,6 +2,7 @@
 
 #include "OpenDoor.h"
 #include "Components/PrimitiveComponent.h"
+#include "Components/AudioComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Actor.h"
@@ -25,9 +26,26 @@ void UOpenDoor::BeginPlay()
 	CurrentYaw = InitialYaw;
 	OpenAngle += InitialYaw;
 
+	FindPressurePlate();
+	FindAudioComponent();
+}
+
+void UOpenDoor::FindAudioComponent()
+{
+	AudioComponent = GetOwner()->FindComponentByClass<UAudioComponent>();
+	if (!AudioComponent)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s Missing audio component!"), *GetOwner()->GetName());
+		return;
+	}
+}
+
+void UOpenDoor::FindPressurePlate()
+{
 	if (!PressurePlate)
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s has the \"OpenDoor\" component on it, but no \"PressurePlate\" set!"), *GetOwner()->GetName())
+		return;
 	}
 }
 
@@ -57,7 +75,19 @@ void UOpenDoor::OpenDoor(float DeltaTime)
 	CurrentYaw = FMath::FInterpTo(CurrentYaw, OpenAngle, DeltaTime, DoorOpeningSpeed); // Flexible way to change Yaw
 	FRotator DoorRotation = GetOwner()->GetActorRotation();
 	DoorRotation.Yaw = CurrentYaw;
+
 	GetOwner()->SetActorRotation(DoorRotation);
+
+	if (!AudioComponent)
+	{
+		return;
+	}
+	if (!OpenDoorSound)
+	{
+		AudioComponent->Play();
+		OpenDoorSound = true;
+		CloseDoorSound = false;
+	}
 }
 
 void UOpenDoor::CloseDoor(float DeltaTime)
@@ -68,6 +98,17 @@ void UOpenDoor::CloseDoor(float DeltaTime)
 	FRotator DoorRotation = GetOwner()->GetActorRotation();
 	DoorRotation.Yaw = CurrentYaw;
 	GetOwner()->SetActorRotation(DoorRotation);
+
+	if (!AudioComponent)
+	{
+		return;
+	}
+	if (!CloseDoorSound)
+	{
+		AudioComponent->Play();
+		OpenDoorSound = false;
+		CloseDoorSound = true;
+	}
 }
 
 float UOpenDoor::TotalMassOfActors() const
@@ -76,7 +117,7 @@ float UOpenDoor::TotalMassOfActors() const
 
 	// Find All Overlapping Actors.
 	TArray<AActor *> OverlappingActors;
-	
+
 	if (!PressurePlate)
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s has the \"OpenDoor\" component on it, but no \"PressurePlate\" set!"), *GetOwner()->GetName())
@@ -84,7 +125,7 @@ float UOpenDoor::TotalMassOfActors() const
 	}
 	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
 
-	for (AActor* Actor : OverlappingActors)
+	for (AActor *Actor : OverlappingActors)
 	{
 		TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
 	}
