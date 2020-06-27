@@ -51,10 +51,12 @@ void UGrabber::Grab()
 {
 	FHitResult HitResult = GetFirstPhysicsBodyInReach();
 	UPrimitiveComponent *ComponentToGrab = HitResult.GetComponent();
+	AActor *ActorHit = HitResult.GetActor();
 
 	// If we hit something then attach the physics handle.
-	if (HitResult.GetActor())
+	if (ActorHit)
 	{
+		if (!PhysicsHandle)	{return;}
 		PhysicsHandle->GrabComponentAtLocation(
 			ComponentToGrab,
 			NAME_None,
@@ -64,10 +66,8 @@ void UGrabber::Grab()
 
 void UGrabber::Release()
 {
-	if (PhysicsHandle->GrabbedComponent)
-	{
-		PhysicsHandle->ReleaseComponent();
-	}
+	if (!PhysicsHandle)	{return;}
+	PhysicsHandle->ReleaseComponent();
 }
 
 // Called every frame
@@ -76,6 +76,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// If the physic handle is attach.
+	if (!PhysicsHandle)	{return;}
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		// Move the object we are holding
@@ -97,7 +98,7 @@ FHitResult UGrabber::GetFirstPhysicsBodyInReach() const
 		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
 		TraceParams);
 
-		return Hit;
+	return Hit;
 }
 
 FVector UGrabber::GetPlayerWorldPos() const
@@ -111,7 +112,6 @@ FVector UGrabber::GetPlayerWorldPos() const
 
 	// Draw a line for showing the reach
 	return PlayerViewPointLocation;
-
 }
 
 FVector UGrabber::GetPlayersReach() const
