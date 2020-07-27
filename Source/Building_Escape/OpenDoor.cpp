@@ -22,9 +22,9 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
-	InitialYaw = GetOwner()->GetActorRotation().Yaw;
-	CurrentYaw = InitialYaw;
-	OpenAngle += InitialYaw;
+	InitDoorLocation = GetOwner()->GetActorLocation().Z;
+	CurrentDoorLocation = InitDoorLocation;
+	OpenedDoorLocation += InitDoorLocation;
 
 	FindPressurePlate();
 	FindAudioComponent();
@@ -70,13 +70,15 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 void UOpenDoor::OpenDoor(float DeltaTime)
 {
-	// CurrentYaw = FMath::Lerp(CurrentYaw, OpenAngle, DeltaTime * 1.f); // Just another way to change Yaw
-	// CurrentYaw = FMath::FInterpConstantTo(CurrentYaw, OpenAngle, DeltaTime, 45); // constant way to change Yaw
-	CurrentYaw = FMath::FInterpTo(CurrentYaw, OpenAngle, DeltaTime, DoorOpeningSpeed); // Flexible way to change Yaw
-	FRotator DoorRotation = GetOwner()->GetActorRotation();
-	DoorRotation.Yaw = CurrentYaw;
+	// CurrentVector = FMath::Lerp(CurrentVector, OpenVector, DeltaTime * 1.f); // Just another way to change Yaw
+	// CurrentVector = FMath::FInterpConstantTo(CurrentVector, OpenVector, DeltaTime, 45); // constant way to change Yaw
+	// CurrentVector = FMath::FInterpTo(CurrentVector, OpenVector, DeltaTime, DoorOpeningSpeed); // Flexible way to change Yaw
 
-	GetOwner()->SetActorRotation(DoorRotation);
+	CurrentDoorLocation = FMath::FInterpConstantTo(CurrentDoorLocation, OpenedDoorLocation, DeltaTime, DoorOpeningSpeed); // Flexible way to change Yaw
+	FVector DoorLocation = GetOwner()->GetActorLocation();
+	DoorLocation.Z = CurrentDoorLocation;
+
+	GetOwner()->SetActorLocation(DoorLocation);
 
 	if (!AudioComponent)
 	{
@@ -92,12 +94,14 @@ void UOpenDoor::OpenDoor(float DeltaTime)
 
 void UOpenDoor::CloseDoor(float DeltaTime)
 {
-	// CurrentYaw = FMath::Lerp(CurrentYaw, InitialYaw, DeltaTime * 1.0f); // Just another way to change Yaw
-	// CurrentYaw = FMath::FInterpConstantTo(CurrentYaw, InitialYaw, DeltaTime, 45); // constant way to change Yaw
-	CurrentYaw = FMath::FInterpTo(CurrentYaw, InitialYaw, DeltaTime, DoorCloseSpeed); // Flexible way to change Yaw
-	FRotator DoorRotation = GetOwner()->GetActorRotation();
-	DoorRotation.Yaw = CurrentYaw;
-	GetOwner()->SetActorRotation(DoorRotation);
+	// CurrentVector = FMath::Lerp(CurrentVector, InitVector, DeltaTime * 1.0f); // Just another way to change Yaw
+	// CurrentVector = FMath::FInterpConstantTo(CurrentVector, InitVector, DeltaTime, 45); // constant way to change Yaw
+	// CurrentVector = FMath::FInterpConstantTo(CurrentVector, OpenVector, DeltaTime, 45); // constant way to change Yaw
+	CurrentDoorLocation = FMath::FInterpConstantTo(CurrentDoorLocation, InitDoorLocation, DeltaTime, DoorOpeningSpeed); // Flexible way to change Yaw
+	FVector DoorLocation = GetOwner()->GetActorLocation();
+	DoorLocation.Z = CurrentDoorLocation;
+	
+	GetOwner()->SetActorLocation(DoorLocation);
 
 	if (!AudioComponent)
 	{

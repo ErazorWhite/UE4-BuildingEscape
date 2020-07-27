@@ -32,11 +32,11 @@ public:
 
 private:
 	
-	float InitialYaw;		
-	float CurrentYaw;		
+	float InitDoorLocation;		
+	float CurrentDoorLocation;		
 	
 	UPROPERTY(EditAnywhere)
-	float OpenAngle = 90.f;	
+	float OpenedDoorLocation = 230.f;	
 	
 	float DoorLastOpened = 0.f;
 	
